@@ -48,13 +48,13 @@ NOTES:
 
 ## Bit Width
 
-| Width || `signed`                                || `unsigned`         |
-|-------||-----------------------------------------||--------------------|
-| 4     || [-8, 8)                                 || [0, 16)            |
-| 8     || [-128, 128)                             || [0, 256)           |
-| 16    || [-32768, 32768)                         || [0, 65536)         |
-| ...   || ...                                     || ...                |
-| N     || [-2<sup>N-1</sup>,   2<sup>N - 1</sup>) || [0, 2<sup>N</sup>) |
+| Width          || `signed`          || `unsigned`                |
+|---------------:||:-----------------:||:--------------------------|
+| 4              || -8 ... 7          || 0 ... 15                  |
+| 8              || -128 ... 127      || 0 ... 255                 |
+| 16             || -32768 ... 32767  || 0 ... 65535               |
+| &vellip;&nbsp; || &vellip;          || <center>&vellip;</center> |
+| N              || &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-2<sup>(N-1)</sup> ... 2<sup>(N - 1)</sup> - 1 || 0 ... 2<sup>N</sup> - 1   |
 
 NOTES:
 
@@ -158,17 +158,55 @@ NOTES:
 * It will allow us to use open source projects more easily, and more easily open
   source our own projects. And it makes it easier for new hires who are already 
   familiar with the standard library to get up to speed.
+* So, like any good project, this is our goal:
 
 @@@
 
-### `"integral_types.h"` &rarr; `<cstdint>`
+# &#x1f366;
 
 NOTES:
 
-* So, this is our goal. We want to replace "integral_types.h" with `<cstdint>`
+* We just want ice cream.
+* But we can't have ice cream until...
+
 @@@
 
-## C++11 introduces `<cstdint>`
+1. Delete `"integral_types.h"`
+1. Ice cream party
+
+NOTES:
+
+* ...we delete "integral_types.h"
+* And we can't just delete "integral_types.h". We need to first...
+
+@@@
+
+
+1. Change spelling of `int64` to `int64_t`
+1. Replace `#include`s
+1. Delete `"integral_types.h"`
+1. Ice cream party
+
+NOTES:
+
+* ... change the spellings of `int64` to `int64_t` across the entire codebase.
+* Then we need to replace  every include of "integral_types.h" with `<cstdint>`.
+* Now, if you've seen talks from Hyrum Wright or Titus Winters in the past, you're
+  probably aware that Google has a lot of practice making these sorts of changes.
+* The idea of doing a global find/replace across is something we're not afraid of.
+* It helps that we have a single monolithic repository for all of our code.
+* But this is where things get tricky. We're really good at find/replace when 
+  the change we're making has no semantic effect on the code. If we're renaming 
+  a function, or a class, for example. Drop-in replacements are easy.
+* So at this point, we have a choice.
+
+@@@
+
+* So that's the question: Is `int64_t` a drop-in replacement for `int64`?
+
+@@@
+
+## Alias definitions
 
 | Alias | "integral_types.h" | `<cstdint>` |
 |-------|--------------------|-------------|
@@ -179,28 +217,14 @@ NOTES:
 
 NOTES:
 
-* While the particular types that these aliases refer to is not specified by the
-  standard, on the platforms we're talking about today these are the definitions
-  of the aliases.
-* If it helps to think concretely let's say we're talking about an X86 machine
-  running Linux and compiling with either GCC or Clang.
-* Do you see the problem?
-
-@@@
-
-## C++11 introduces `<cstdint>`
-
-| Alias | "integral_types.h" | `<cstdint>` |
-|-------|--------------------|-------------|
-| `int8(_t)` | `signed char` | `signed char` |
-| `int16(_t)` | `short` | `short` |
-| `int32(_t)` | `int` | `int` |
-| `int64(_t)` | `long long` | `long` `____` <!-- .element: class="highlight-text-red" --> |
-
-NOTES:
-
-* That's the problem. All the aliases we have match exactly, except the `int64`
-  alias.
+* As I mentioned, the particular definitions for these aliases depend on your
+  hardware, operating system, compiler, and standard library. But today we're
+  focussing our attention to 64-bit X86, running linux, compiling with either 
+  GCC or Clang and using their provided standard libraries.
+* On those platforms, these are the definitions you'll find.
+* And you can see the problem! All the aliases we have match exactly, except the
+  `int64` alias.
+TODO WORK ON NOTES BELOW HERE TO FLOW BETTER
 * Okay, so they're different. But why is this even an issue? Either alias is
   correct. Who cares?
 * We don't actually care which one we use, but we'd really prefer not to have

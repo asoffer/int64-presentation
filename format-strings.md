@@ -44,7 +44,7 @@ NEXT
 ```cc[]
 class Logger {
  public:
-  void Log(const char *format, ...) 
+  void Log(const char *fmt, ...) 
     __attribute__((format(printf, 1, 2)));
  ...
 };
@@ -60,7 +60,7 @@ NOTES:
 ```cc[]
 class Logger {
  public:
-  virtual void Log(const char *format, ...) 
+  virtual void Log(const char *fmt, ...) 
     __attribute__((format(printf, 1, 2)));
  ...
 };
@@ -137,7 +137,7 @@ struct LogMessage {
 };
 ```
 
-Error: Undefinded symbol **`LogMessage::kSeverity`**
+Error: Undefined symbol **`LogMessage::kSeverity`**
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 NOTES:
@@ -159,7 +159,7 @@ NEXT
 
 ```cc []
 // File: stringprintf.h
-std::string StringPrintf(const char *format, ...) {
+std::string StringPrintf(const char *fmt, ...) {
   ...
 }
 ```
@@ -167,7 +167,7 @@ std::string StringPrintf(const char *format, ...) {
 ```cc []
 // File: absl/strings/str_format.h
 template <typename... Args>
-std::string StrFormat(const FormatSpec<Args...>& format,
+std::string StrFormat(const FormatSpec<Args...>& fmt,
                       const Args&... args) {
   ...
 }
@@ -211,7 +211,7 @@ struct LogMessage {
 };
 ```
 
-Error: Undefinded symbol **`LogMessage::kSeverity`**
+Error: Undefined symbol **`LogMessage::kSeverity`**
 
 NOTES:
 
