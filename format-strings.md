@@ -101,20 +101,19 @@ NOTES:
 @@@
 
 ```cc []
-struct LogMessage {
-  std::string message;
+struct Puppy {
+  std::string name;
 
-  std::string DebugString() const {
+  std::string ToString() const {
     return StringPrintf(
-        R"(LogMessage(message = "%s", severity = %d))", 
-        message.c_str(), kSeverity);
+        R"(Puppy(name = "%s", cuteness = %d))", 
+        name.c_str(), kCuteness);
   }
 
-  static const int kSeverity = 10;
+  static const int kCuteness = 11;
 };
 ```
 
-<br/>
 <p>&nbsp;</p>
 
 NOTES:
@@ -124,20 +123,20 @@ NOTES:
 @@@
 
 ```cc []
-struct LogMessage {
-  std::string message;
+struct Puppy {
+  std::string name;
 
-  std::string DebugString() const {
+  std::string ToString() const {
     return absl::StrFormat(
-        R"(LogMessage(message = "%s", severity = %d))", 
-        message, kSeverity);
+        R"(Puppy(name = "%s", cuteness = %d))", 
+        name, kCuteness);
   }
 
-  static const int kSeverity = 10;
+  static const int kCuteness = 11;
 };
 ```
 
-Error: Undefined symbol **`LogMessage::kSeverity`**
+Error: Undefined symbol **`Puppy::kCuteness`**
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 NOTES:
@@ -187,31 +186,31 @@ NOTES:
 
 @@@
 
-[basic.def.odr.5](http://eel.is/c++draft/basic.def.odr#5)
+[basic.def.odr/p5](http://eel.is/c++draft/basic.def.odr#5)
 
 NOTES:
 
 * And roughly speaking it says if you pass a variable by reference, it needs a definition.
 * Initializing a static inside the class doesn't count. Why? I have no idea.
-* But, if the variable is `constexpr` it doesn't need a definition.
+* But, if the variable is `constexpr` then it does count as an inline definition.
 
 @@@
 
 ```cc []
-struct LogMessage {
-  std::string message;
+struct Puppy {
+  std::string name;
 
-  std::string DebugString() const {
+  std::string ToString() const {
     return absl::StrFormat(
-        R"(LogMessage(message = "%s", severity = %d))", 
-        message, kSeverity);
+        R"(Puppy(name = "%s", cuteness = %d))", 
+        name, kCuteness);
   }
 
-  static const int kSeverity = 10;
+  static const int kCuteness = 11;
 };
 ```
 
-Error: Undefined symbol **`LogMessage::kSeverity`**
+Error: Undefined symbol **`Puppy::kCuteness`**
 
 NOTES:
 
@@ -220,20 +219,19 @@ NOTES:
 @@@
 
 ```cc []
-struct LogMessage {
-  std::string message;
+struct Puppy {
+  std::string name;
 
-  std::string DebugString() const {
+  std::string ToString() const {
     return absl::StrFormat(
-        R"(LogMessage(message = "%s", severity = %d))", 
-        message, kSeverity);
+        R"(Puppy(name = "%s", cuteness = %d))", 
+        name, kCuteness);
   }
 
-  static constexpr int kSeverity = 10;
+  static constexpr int kCuteness = 11;
 };
 ```
 
-&nbsp;<br/>
 &nbsp;<br/>
 
 NOTES:
@@ -244,11 +242,11 @@ NOTES:
 @@@
 
 # &#x1F600;
-Clang tooling
+Clang Tools
 
 NOTES:
 
-* Clang tools were really instrumental to making this problem manageable.
+* Clang Tools were really instrumental to making this problem manageable.
 * There's just no way we would have been able to make hundreds of thousands of 
   edits to our codebase safely without them.
 * On the flip side...

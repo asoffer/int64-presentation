@@ -28,7 +28,7 @@ namespace std {
 
 template <typename T>
 const T& max(const T& lhs, const T& rhs) {
-  return (lhs < rhs) ? rhs : lhs;
+  ...
 }
 
 }  // namespace std
@@ -200,17 +200,16 @@ NOTES:
 * And look at that! Both `long` and `long long` implicitly convert to `bool`.
 * So the bool overload is called, but that produces subtly incorrect results. 
   The literal zero will be converted to `false`. If the `int64` `value` where 
-  negative, the answer should certainly be `false`. Instead but it would be 
+  negative, the answer should certainly be `false`. Instead it would be
   converted to `true` and the comparison would say that `false` is less than 
   `true`, so the result would incorrectly return `true`.
 * Terrifying.
 * Alright, lets think about our questions. What went well?
-  
 
 @@@
 
 # &#x1F600;
-Clang tools
+Clang Tools
 
 NOTES:
 

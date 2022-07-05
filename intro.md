@@ -154,55 +154,114 @@ NOTES:
 * Fast-forward about a decade. The C++11 standard introduces aliases, that serve the
   same purpose.
 * This is great, if we use these type aliases, our code will be more compatible
-  external projects.
+  with external projects.
 * It will allow us to use open source projects more easily, and more easily open
   source our own projects. And it makes it easier for new hires who are already 
   familiar with the standard library to get up to speed.
-* So, like any good project, this is our goal:
+* So, this is our goal:
 
 @@@
 
-# &#x1f366;
+<ol>
+<li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li style="color: rgba(0,0,0,0);">Change use of <code>int64</code> to <code>int64_t</code></li>
+<li style="color: rgba(0,0,0,0);">Replace <code>#include</code>s</li>
+<li value="1">Delete <code>"integral_types.h"</code></li>
+<li style="color: rgba(0,0,0,0);">Ice cream party</li>
+</ol>
 
 NOTES:
 
-* We just want ice cream.
-* But we can't have ice cream until...
+* We want to delete "integral_types.h" in favor of using the standard library.
+* Once we've done that, we get all the...
 
 @@@
 
-1. Delete `"integral_types.h"`
-1. Ice cream party
+<ol>
+<li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li style="color: rgba(0,0,0,0);">Change use of <code>int64</code> to <code>int64_t</code></li>
+<li style="color: rgba(0,0,0,0);">Replace <code>#include</code>s</li>
+<li value="1">Delete <code>"integral_types.h"</code></li>
+<li>Ice cream party</li>
+</ol>
 
 NOTES:
 
-* ...we delete "integral_types.h"
-* And we can't just delete "integral_types.h". We need to first...
+* ...amazing benefits that come from using the standard library.
+* But we can't just delete "integral_types.h". Everything will break if we do 
+  that. We need to first...
 
 @@@
 
-
-1. Change spelling of `int64` to `int64_t`
-1. Replace `#include`s
-1. Delete `"integral_types.h"`
-1. Ice cream party
+<ol>
+<li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li style="color: rgba(0,0,0,0);">Replace <code>#include</code>s</li>
+<li value="1">Change use of <code>int64</code> to <code>int64_t</code></li>
+<li>Delete <code>"integral_types.h"</code></li>
+<li>Ice cream party</li>
+</ol>
 
 NOTES:
 
-* ... change the spellings of `int64` to `int64_t` across the entire codebase.
-* Then we need to replace  every include of "integral_types.h" with `<cstdint>`.
+* ...change the uses of `int64` to `int64_t` and similarly for all the other type aliases.
+* we also need to...
+
+@@@
+
+<ol>
+<li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li value="1">Change use of <code>int64</code> to <code>int64_t</code></li>
+<li>Replace <code>#include</code>s</li>
+<li>Delete <code>"integral_types.h"</code></li>
+<li>Ice cream party</li>
+</ol>
+
+NOTES:
+
+* ...replace  every include of "integral_types.h" with `<cstdint>`.
 * Now, if you've seen talks from Hyrum Wright or Titus Winters in the past, you're
   probably aware that Google has a lot of practice making these sorts of changes.
-* The idea of doing a global find/replace across is something we're not afraid of.
+* The idea of doing a global find/replace across our entire codebase is something
+  we're not afraid of.
 * It helps that we have a single monolithic repository for all of our code.
-* But this is where things get tricky. We're really good at find/replace when 
-  the change we're making has no semantic effect on the code. If we're renaming 
-  a function, or a class, for example. Drop-in replacements are easy.
-* So at this point, we have a choice.
+* But this is where things get tricky. We're well-practiced with find/replace 
+  when the change we're making has no semantic effect on the code. If we're 
+  renaming a function, or a class, for example. Drop-in replacements are easy.
+* So our actual first step towards having our ice cream party is to...
 
 @@@
 
-* So that's the question: Is `int64_t` a drop-in replacement for `int64`?
+<ol>
+<li>Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li>Change use of <code>int64</code> to <code>int64_t</code></li>
+<li>Replace <code>#include</code>s</li>
+<li>Delete <code>"integral_types.h"</code></li>
+<li>Ice cream party</li>
+</ol>
+
+NOTES:
+
+* ...ensure that `int64` and `int64_t` are the same type. That's how we'll know
+  one is a drop-in replacement for the other.
+* In fact, this is the...
+
+@@@
+
+<ol>
+<li style="color:#f00">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li>Change use of <code>int64</code> to <code>int64_t</code></li>
+<li>Replace <code>#include</code>s</li>
+<li>Delete <code>"integral_types.h"</code></li>
+<li>Ice cream party</li>
+</ol>
+
+NOTES:
+
+* ...only thing we're going to be talking about today.
+* The rest of the steps here are surprisingly interesting as well, but we're
+  going to focus on just this first step today.
+* So lets actually take a look at the aliases. We've learned that the standard
+  doesn't make any guarantees for us, but... maybe we'll get lucky?
 
 @@@
 
@@ -224,14 +283,9 @@ NOTES:
 * On those platforms, these are the definitions you'll find.
 * And you can see the problem! All the aliases we have match exactly, except the
   `int64` alias.
-TODO WORK ON NOTES BELOW HERE TO FLOW BETTER
-* Okay, so they're different. But why is this even an issue? Either alias is
-  correct. Who cares?
-* We don't actually care which one we use, but we'd really prefer not to have
-  two versions.
-* In order to start using the standard library aliases, we're going to first
-  change our internal alias to match the standard library.
-* And this is what the talk is about.
+* If these aliases **were** the same, we'd have a drop-in replacement. But 
+  in fact they are different, and so we have to fix that.
+* This is what we're talking about today.
 
 @@@@@
 
@@ -247,13 +301,15 @@ TODO WORK ON NOTES BELOW HERE TO FLOW BETTER
 
 NOTES:
 
-* This one-line change. Not even one line. a four character change.
-* How hard could this possibly be difficult?
-* Before we dig into all the reasons this is hard, I want to take a moment
-  to put you in the mindset I was in when I first asked that question.
+* This one-line change. Not even one line. A four character change.
+* How hard could this possibly be?
+* Before we dig into all the reasons this is hard, I want to take a moment to 
+  put you in the mindset I was in when I first asked that question.
 * So I'm going to tell you all the reasons this should be easy.
 
 @@@
+
+## How Hard Could It Be?
 
 ``` cc []
 long long x = long{1234};
@@ -266,10 +322,13 @@ long y = long long{1234};
 
 NOTES:
 
-* For starters, the types are interconvertible, even implicitly.
-* And represent the same range of values, so there's no possibility of narrowing.
+* For starters, they're interconvertible, even implicitly.
+* And they represent the same range of values, so there's no possibility of 
+  narrowing or data loss.
 
 @@@
+
+## How Hard Could It Be?
 
 ``` cc []
 long long x = long{1234};
@@ -286,6 +345,8 @@ NOTES:
 
 @@@
 
+## How Hard Could It Be?
+
 ``` cc []
 long long x = long{1234};
 long y = long long{1234};
@@ -301,6 +362,8 @@ NOTES:
 
 @@@
 
+## How Hard Could It Be?
+
 ``` cc []
 long long x = long{1234};
 long y = long long{1234};
@@ -314,13 +377,13 @@ NOTES:
 * In fact the bit representations of these two types are identical.
 * These types are as identical as they could possibly be. Processors don't even
   distinguish between them.
-* So now that I've tricked you into thinking this is an easy problem and a very
+* So now that I've tricked you into thinking this is an easy problem and a very 
   short talk, I want to share with you what made this such a hard problem.
-* But I don't just want to be a downer. I want to try to understand what makes
+* But I don't just want to be a downer. I want to try to understand what makes 
   it difficult, and how we can reduce the cost for similar problems in the future.
 * As we look examples of problems we encountered, I want you to have three 
-  questions in mind. And we're going to continue to revisit these questions as we
-  go through the examples.
+  questions in mind. And we're going to continue to revisit these questions as 
+  we go through the examples.
 
 @@@@@
 
