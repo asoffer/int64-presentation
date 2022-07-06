@@ -2,7 +2,7 @@
 
 NOTES:
 
-* Let's start with a warm-up...
+* Let's start with a warm-up.
 
 @@@
 
@@ -137,4 +137,6 @@ Few large/heavily-used class hierarchies
 NOTES:
 
 * ... there were very few class hierarchies here that needed to be changed atomically.
-* I haven't done any counting here, but I'd guess that the same wouldn't be true for strings.
+* I haven't done any counting here, but I'd guess that if instead of talking 
+  about changing an alias related to integers we were talking about changing an
+  alias related to strings, this would be a much bigger concern.

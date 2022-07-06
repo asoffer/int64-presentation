@@ -1,15 +1,4 @@
-## How Hard Could It Be?
-#### Lessons Learned from<br />Replacing `int64` with `int64_t`
-
-<br/>
-
-#### C++ on Sea 2022
-
-<br/>
-
-Andy Soffer [he/him]
-
-https://github.com/asoffer/int64-presentation
+<!-- .element: data-background-image="img/title.png" -->
 
 NOTES:
 
@@ -21,9 +10,8 @@ NOTES:
   project.
 * So we're going to be exploring a few of the things that make this a hard
   problem. And some of the things you might not expect to make this difficult.
-* I'm going to ask that you please hold questions until the end.
 * And with that, lets dive right into it. Since we're talking about integers, 
-  it's worth reviewing some of the details of what integer are in C++.
+  it's worth reviewing some of the details of what integers are in C++.
 
 @@@@@
 
@@ -69,8 +57,8 @@ NOTES:
   zero. They can actually represent one more negative value than they can 
   positive values, and that's because zero takes up one of the spots we would 
   otherwise allot to a positive integer.
-* When first started learning C++, I was told "an `int` is 4 bytes. It can hold 
-  values between -2<sup>31</sup> and 2<sup>31</sup> - 1.
+* When I first started learning C++, I was told "an `int` is 4 bytes. It can hold 
+  values between -2<sup>31</sup> and 2<sup>31</sup> - 1."
 * But that's not the whole story. That was probably true on whatever computer I 
   was using at the time, but it's by no means guaranteed.
 
@@ -91,7 +79,7 @@ NOTES:
   be a perfectly reasonable bit width.
 * So what do we do now? If I want to represent a number, what type should I use?
 * How do I know the type I choose will be large enough? I might not know the 
-  platforms I'm working on?
+  platforms I'm working on.
 * The answer is, you do something like this...  
 
 @@@
@@ -162,6 +150,8 @@ NOTES:
 
 @@@
 
+## The plan
+
 <ol>
 <li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
 <li style="color: rgba(0,0,0,0);">Change use of <code>int64</code> to <code>int64_t</code></li>
@@ -176,6 +166,8 @@ NOTES:
 * Once we've done that, we get all the...
 
 @@@
+
+## The plan
 
 <ol>
 <li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
@@ -193,6 +185,8 @@ NOTES:
 
 @@@
 
+## The plan
+
 <ol>
 <li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
 <li style="color: rgba(0,0,0,0);">Replace <code>#include</code>s</li>
@@ -207,6 +201,8 @@ NOTES:
 * we also need to...
 
 @@@
+
+## The plan
 
 <ol>
 <li style="color: rgba(0,0,0,0);">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
@@ -231,6 +227,8 @@ NOTES:
 
 @@@
 
+## The plan
+
 <ol>
 <li>Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
 <li>Change use of <code>int64</code> to <code>int64_t</code></li>
@@ -246,6 +244,8 @@ NOTES:
 * In fact, this is the...
 
 @@@
+
+## The plan
 
 <ol>
 <li style="color:#f00">Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
@@ -424,3 +424,42 @@ NOTES:
   we typically ask when conducting a post-mortem.
 * I think this is a really great way to frame learning from any experience, good
   or bad.
+* Before we get started, I want to address a question that comes up pretty 
+  frequently.
+
+@@@
+
+## The plan
+
+<ol>
+<li>Ensure <code>int64</code> is the same type as <code>int64_t</code></li>
+<li>Change use of <code>int64</code> to <code>int64_t</code></li>
+<li>Replace <code>#include</code>s</li>
+<li>Delete <code>"integral_types.h"</code></li>
+<li>Ice cream party</li>
+</ol>
+
+NOTES:
+
+* The question is "why ensure that the aliases are the same first? Why not just
+  start changing uses of `int64`.
+* This is a fantastic question, and it has a really subtle answer.
+* With either approach, the end state is the same: We'll be using `int64_t` 
+  everywhere, it will be an alias for `long`, and we're going to get our ice
+  cream.
+* But suppose we just start changing uses of `int64` to `int64_t`. In a large
+  codebase, this could take a very long time. And we're not sure exactly what 
+  we're going to encounter along the way.
+* What happens if we get halfway through and then find out that actually it's
+  going to be too difficult to fix? Or maybe our priorities change.
+* Now our codebase is half-converted. Do we convert it back? Do we leave it in 
+  this intermediate state? What guidance do we provide to developers on what
+  they should be using?
+* On the other hand, if we make the types identical first, if we decide to
+  pause, the user visible changes are minimal.
+* In short, by doing all the hard work of making the aliases equivalent
+  upfront, we're front-loading as much of the costs and risks as possible,
+  so that we find out about problems as quickly as we possibly can.
+* If you ever manage a refactoring like this, this is a majorly important idea
+  that I promise will save you a lot of stress.
+* PAUSE 
