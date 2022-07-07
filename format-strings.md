@@ -270,7 +270,7 @@ Missing definitions identified late
 
 NOTES:
 * Another problem is that the missing definitions were identified late. What I 
-  mean by that we know that many uses of these variables probably needed to have
+  mean by that we know that many uses of these variables probably wanted to have
   a definition, but the problem was only identified when someone actually began
   to use it.
 
